@@ -1,0 +1,13 @@
+#Directories
+.vs/
+build/
+external/mwaWebApiClient/.vscode/
+external/mwaWebApiClient/bin/
+external/mwaWebApiClient/obj/
+external/mwaWebApiClient/vs2019/.vs/
+external/mwaWebApiClient/vs2019/bin/
+
+#Files
+*.user
+src/*.o
+src/ApiKey.h

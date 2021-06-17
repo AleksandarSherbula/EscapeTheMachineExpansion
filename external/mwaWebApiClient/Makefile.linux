@@ -1,0 +1,47 @@
+ifndef PROJECT
+	PROJECT     := PGEApp
+endif
+
+ifdef DEBUG
+BUILD		:= -ggdb3 -Og
+endif
+
+ifdef RELEASE
+BUILD		:= -O3
+endif
+
+CXX_FLAGS   := $(BUILD) -Bstatic -static-libgcc -static-libstdc++ -std=c++17
+CXX         := g++
+
+BIN         := bin
+SRC         := src
+INC         := include
+LIB         := lib
+OBJ         := obj
+RES         := res
+
+INC_FLAG    := -I$(INC) -Ivendor
+LIB_FLAG    := -L$(LIB)
+
+EXECUTABLE  := $(PROJECT)
+PLATFORM    := linux-x86_64
+LIBRARIES   := -lm -lX11 -lGL -lpthread -lpng -lstdc++fs -lssl -lcrypto
+CLEAN_COMMAND := -rm $(BIN)/$(EXECUTABLE) $(OBJ)/$(PLATFORM)/*.o
+
+SOURCES     := $(wildcard $(SRC)/*.cpp)
+OBJECTS     := $(patsubst $(SRC)/%,$(OBJ)/$(PLATFORM)/%,$(SOURCES:.cpp=.o))
+
+.PHONY: clean all
+
+all: $(BIN)/$(EXECUTABLE)
+
+clean:
+	$(CLEAN_COMMAND)
+
+# Compile only
+$(OBJ)/$(PLATFORM)/%.o : $(SRC)/%.cpp $(DEPENDENCIES)
+	$(CXX) $(CXX_FLAGS) $(INC_FLAG) -c -o $@ $<
+
+# Link the object files and libraries
+$(BIN)/$(EXECUTABLE) : $(OBJECTS)
+	$(CXX) $(CXX_FLAGS) -o $(BIN)/$(EXECUTABLE) $^ $(LIBRARIES) $(LIB_FLAG)

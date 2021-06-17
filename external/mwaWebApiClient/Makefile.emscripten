@@ -1,0 +1,44 @@
+ifndef PROJECT
+	PROJECT     := PGEApp
+endif
+
+CXX_FLAGS   := -O3 -s ALLOW_MEMORY_GROWTH=1 -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=["mwa_do_fetch","mwa_get_user_agent"]' -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 -s USE_LIBPNG=1 -std=c++17
+CXX         := em++
+
+BIN         := bin
+SRC         := src
+INC         := include
+LIB         := lib
+OBJ         := obj
+RES         := res
+
+INC_FLAG    := -I$(INC) -Ivendor
+LIB_FLAG    := -L$(LIB)
+
+EXECUTABLE  := $(PROJECT)
+PLATFORM    := wasm
+LIBRARIES   :=
+
+ifeq ($(OS),Windows_NT)
+	CLEAN_COMMAND := del $(BIN)\\*.html $(BIN)\\*.js $(BIN)\\*.wasm $(OBJ)\\$(PLATFORM)\*.o
+else
+	CLEAN_COMMAND := -rm $(BIN)/*.html $(BIN)/*.js $(BIN)/*.wasm $(OBJ)/$(PLATFORM)/*.o
+endif
+
+SOURCES     := $(wildcard $(SRC)/*.cpp)
+OBJECTS     := $(patsubst $(SRC)/%,$(OBJ)/$(PLATFORM)/%,$(SOURCES:.cpp=.o))
+
+.PHONY: clean all
+
+all: $(BIN)/$(EXECUTABLE).html
+
+clean:
+	$(CLEAN_COMMAND)
+
+# Compile only
+$(OBJ)/$(PLATFORM)/%.o : $(SRC)/%.cpp $(DEPENDENCIES)
+	$(CXX) $(CXX_FLAGS) $(INC_FLAG) -c -o $@ $<
+
+# Link the object files and libraries
+$(BIN)/$(EXECUTABLE).html : $(OBJECTS)
+	$(CXX) $(CXX_FLAGS) -o $(BIN)/$(EXECUTABLE).html $^ $(LIBRARIES) $(LIB_FLAG)

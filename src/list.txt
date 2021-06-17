@@ -1,0 +1,14 @@
+-O3 -s ALLOW_MEMORY_GROWTH=1 -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=["mwa_do_fetch","mwa_get_user_agent"]' -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 -s USE_LIBPNG=1 -std=c++17
+
+
+Ending.cpp
+Game.cpp
+Level.cpp
+main.cpp
+Menu.cpp
+Object.cpp
+olcPixelGameEngine.cpp
+Scoreboard.cpp
+StarMap.cpp
+TimeAttack.cpp
+TitleCard.cpp
